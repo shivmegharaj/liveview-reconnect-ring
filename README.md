@@ -57,22 +57,23 @@ Ways to avoid the bar:
    joins your existing process and ignores new flags, so the separate data
    dir matters.
 
-### Silent-debugger Chrome (`scripts/open-chrome.py`)
+### Silent-debugger Chrome
 
 Launches a dedicated Chrome process with its own user-data directory and
 `--silent-debugger-extension-api`, so recovery clicks do not show the yellow
-debugger bar. Needs Python 3. From the repo root:
+debugger bar. No Python required.
 
 **macOS / Linux**
 
 ```bash
-python3 scripts/open-chrome.py
+chmod +x scripts/open-chrome.sh   # once
+./scripts/open-chrome.sh
 ```
 
-**Windows** (Command Prompt or PowerShell)
+**Windows** (double-click, or from Command Prompt / PowerShell)
 
 ```bat
-py -3 scripts\open-chrome.py
+scripts\open-chrome.cmd
 ```
 
 The script prints the Chrome binary and profile path it will use, then opens
