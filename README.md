@@ -57,28 +57,36 @@ Ways to avoid the bar:
    joins your existing process and ignores new flags, so the separate data
    dir matters.
 
-### Silent-debugger Chrome (Mac / Windows / Linux)
+### Silent-debugger Chrome (`scripts/open-chrome.py`)
 
-Needs Python 3. From the repo root:
+Launches a dedicated Chrome process with its own user-data directory and
+`--silent-debugger-extension-api`, so recovery clicks do not show the yellow
+debugger bar. Needs Python 3. From the repo root:
+
+**macOS / Linux**
 
 ```bash
 python3 scripts/open-chrome.py
 ```
 
-On Windows (Command Prompt or PowerShell):
+**Windows** (Command Prompt or PowerShell)
 
 ```bat
 py -3 scripts\open-chrome.py
 ```
 
-That window is a separate Chrome profile. Load unpacked `extension/` there,
-open Multi-Cam, keep **Active** on. Your everyday Chrome is unchanged and
-will not show the yellow bar from this instance.
+The script prints the Chrome binary and profile path it will use, then opens
+`https://account.ring.com/`. Load unpacked `extension/` in that window, open
+Multi-Cam, keep **Active** on. Your everyday Chrome is unchanged and will not
+show the yellow bar from this instance.
 
-Optional overrides:
+Optional env overrides:
 
-- `CHROME_PATH`: full path to the Chrome binary
-- `LVR_CHROME_DATA_DIR`: custom profile folder
+- `CHROME_PATH`: full path to the Chrome (or Chromium) binary
+- `LVR_CHROME_DATA_DIR`: custom profile folder (default is a separate
+  LiveViewReconnectRing data dir under your OS app-support path)
+
+Pass `--dry-run` to print the launch command without starting Chrome.
 
 ## Privacy
 
@@ -96,13 +104,16 @@ Privacy questions: open a GitHub issue on this repository.
 
 ## Security
 
-Only the latest release is supported. Report vulnerabilities via GitHub's
-private vulnerability reporting on this repo (or an issue without exploit
-details asking for a secure contact). Do not post working exploit code
-publicly.
+Supported: latest commit on `main` only.
 
-The extension requests the `debugger` permission solely to click Reconnect on
-`account.ring.com`. It never handles Ring credentials.
+Report vulnerabilities privately via GitHub Security Advisories on this
+repository. If that is unavailable, open an issue without exploit details and
+ask for a secure contact. Do not post working exploit code publicly.
+
+The extension uses Chrome's `debugger` permission briefly on
+`https://account.ring.com/*` to dispatch trusted Reconnect / Start Live Views
+clicks, then detaches. It never handles Ring credentials. Review the source
+before installing forks.
 
 ## Intended use
 
