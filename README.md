@@ -107,20 +107,26 @@ Privacy questions: open a GitHub issue on this repository.
 Supported: latest commit on `main` only.
 
 Report vulnerabilities privately via GitHub Security Advisories on this
-repository. If that is unavailable, open an issue without exploit details and
-ask for a secure contact. Do not post working exploit code publicly.
+repository (private vulnerability reporting is enabled). If that is
+unavailable, open an issue without exploit details and ask for a secure
+contact. Do not post working exploit code publicly.
 
 The extension uses Chrome's `debugger` permission briefly on
 `https://account.ring.com/*` to dispatch trusted Reconnect / Start Live Views
-clicks, then detaches. It never handles Ring credentials. Review the source
-before installing forks.
+clicks, then detaches. It never handles Ring credentials.
+
+Install only this repository (or a commit you audited). Treat third-party
+forks, prebuilt CRX/ZIP packages, and “improved” builds as untrusted—
+especially if they broaden host permissions, stay attached to the debugger,
+or add remote code / analytics.
 
 ## Intended use
 
 For keeping **your own** Ring multi-cam live view alive on a machine you
-control. Do not use this to probe, scrape, or abuse Ring's services. Forks
-that change host permissions or debugger behavior should be reviewed before
-install.
+control. Scope is recovery clicks on `account.ring.com` only—not scraping,
+bulk export, probing other hosts, or general Ring/Amazon automation. Do not
+use this to abuse Ring's services. Review any fork that changes host
+permissions or debugger behavior before install.
 
 ## License
 
