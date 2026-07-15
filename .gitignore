@@ -1,0 +1,12 @@
+.DS_Store
+.claude/
+*.log
+*.crx
+*.pem
+*.zip
+.vscode/
+.idea/
+node_modules/
+.env
+.env.*
+*.key

@@ -1,0 +1,486 @@
+:root {
+  color-scheme: light dark;
+  --radius: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-ui: "Avenir Next", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Light */
+:root {
+  --bg0: #f3efe6;
+  --bg1: #fffdf8;
+  --panel: rgba(255, 253, 248, 0.78);
+  --ink: #1a211c;
+  --muted: #5f6b63;
+  --line: rgba(26, 33, 28, 0.1);
+  --ok: #1f8a55;
+  --ok-soft: rgba(31, 138, 85, 0.14);
+  --warn: #b86a12;
+  --warn-soft: rgba(184, 106, 18, 0.14);
+  --bad: #c13b3b;
+  --bad-soft: rgba(193, 59, 59, 0.12);
+  --accent: #0e6b5c;
+  --accent-ink: #fffdf8;
+  --glow: radial-gradient(120% 90% at 10% -10%, rgba(14, 107, 92, 0.18), transparent 55%),
+    radial-gradient(90% 70% at 100% 0%, rgba(184, 106, 18, 0.12), transparent 50%);
+  --shadow: 0 10px 30px rgba(26, 33, 28, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg0: #0c1210;
+    --bg1: #121a17;
+    --panel: rgba(18, 26, 23, 0.82);
+    --ink: #e8f0ea;
+    --muted: #93a399;
+    --line: rgba(232, 240, 234, 0.1);
+    --ok: #3ecf8e;
+    --ok-soft: rgba(62, 207, 142, 0.14);
+    --warn: #e0a24a;
+    --warn-soft: rgba(224, 162, 74, 0.14);
+    --bad: #ef6b6b;
+    --bad-soft: rgba(239, 107, 107, 0.14);
+    --accent: #4ec4a8;
+    --accent-ink: #07110e;
+    --glow: radial-gradient(120% 90% at 0% 0%, rgba(78, 196, 168, 0.16), transparent 55%),
+      radial-gradient(90% 70% at 100% 10%, rgba(224, 162, 74, 0.1), transparent 48%);
+    --shadow: 0 14px 36px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* Fixed size on html+body so Chrome’s popup window never resizes on open
+   (content paint / font metrics / async tile cards must not grow the shell). */
+html {
+  width: 360px;
+  height: 540px;
+  overflow: hidden;
+}
+
+body {
+  width: 360px;
+  height: 540px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background: var(--bg0);
+  font: 12.5px/1.45 var(--font-ui);
+}
+
+.glow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 1;
+  /* Keep animated paint inside the popup; Chrome sizes the window to
+     transformed descendants even when overflow is hidden. */
+  contain: strict;
+  clip-path: inset(0);
+}
+
+header,
+.controls,
+main,
+#empty,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fixed chrome; only main flexes and scrolls, so the popup never resizes on open. */
+header,
+.controls,
+#empty,
+footer { flex: none; }
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 10px;
+}
+
+.brand {
+  display: flex;
+  gap: 11px;
+  min-width: 0;
+}
+
+.mark {
+  width: 11px;
+  height: 11px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 4px var(--ok-soft);
+  flex: none;
+  animation: pulse 2.8s var(--ease) infinite;
+}
+
+.mark.warn {
+  background: var(--warn);
+  box-shadow: 0 0 0 4px var(--warn-soft);
+}
+.mark.bad {
+  background: var(--bad);
+  box-shadow: 0 0 0 4px var(--bad-soft);
+  animation: pulse 1.4s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+h1 {
+  margin: 0;
+  font: 600 17px/1.15 var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+.tagline {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 7px 11px;
+  font: 600 11px/1 var(--font-ui);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: transform 160ms var(--ease), background 160ms var(--ease);
+}
+.icon-btn:hover { transform: translateY(-1px); }
+.icon-btn:active { transform: translateY(0); }
+.icon-btn.busy svg { animation: spin 0.8s linear infinite; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0 16px 12px;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+}
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch .track {
+  width: 28px;
+  height: 16px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
+  position: relative;
+  transition: background 180ms var(--ease);
+}
+.switch .track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 180ms var(--ease);
+}
+.switch input:checked + .track {
+  background: var(--accent);
+}
+.switch input:checked + .track::after {
+  transform: translateX(12px);
+}
+.switch .label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 12px 10px;
+}
+
+.tab {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.tab h2 {
+  margin: 0 0 10px;
+  font: 600 12px/1.2 var(--font-ui);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--bg0) 55%, transparent);
+  border: 1px solid transparent;
+  transition: border-color 180ms var(--ease), transform 180ms var(--ease);
+}
+.tile.unhealthy {
+  border-color: color-mix(in srgb, var(--warn) 45%, transparent);
+  background: var(--warn-soft);
+}
+.tile:hover { transform: translateY(-1px); }
+
+.tile-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.dot.healthy { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.dot.dead, .dot.verifying { background: var(--warn); box-shadow: 0 0 0 3px var(--warn-soft); }
+.dot.frozen { background: var(--bad); box-shadow: 0 0 0 3px var(--bad-soft); }
+
+.tile-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.tile-status {
+  font-size: 10.5px;
+  color: var(--muted);
+  text-transform: capitalize;
+  padding-left: 15px;
+}
+.tile-meta {
+  font-size: 10px;
+  color: var(--muted);
+  padding-left: 15px;
+}
+
+.banner {
+  background: var(--bad-soft);
+  color: var(--bad);
+  padding: 8px 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.banner.paused {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+#empty {
+  padding: 8px 16px 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button.action {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 11px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: 700 12px/1.2 var(--font-ui);
+  cursor: pointer;
+  transition: transform 160ms var(--ease), filter 160ms var(--ease);
+}
+button.action:hover { transform: translateY(-1px); filter: brightness(1.05); }
+button.action:disabled { opacity: 0.55; cursor: default; transform: none; }
+
+.stale { opacity: 0.55; }
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px 12px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10.5px;
+}
+footer a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+footer a:hover {
+  color: var(--accent);
+}
+footer code {
+  font-family: ui-monospace, Menlo, monospace;
+  color: var(--accent);
+}
+/* ============================================================
+   Frosted glass overlay styles.
+   Layered on top of the base styles above.
+   ============================================================ */
+
+:root {
+  --glass: color-mix(in srgb, var(--bg1) 46%, transparent);
+  --rim: color-mix(in srgb, white 55%, transparent);
+  --rim-soft: color-mix(in srgb, white 8%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass: color-mix(in srgb, var(--bg1) 42%, transparent);
+    --rim: color-mix(in srgb, white 34%, transparent);
+    --rim-soft: color-mix(in srgb, white 5%, transparent);
+  }
+}
+
+/* Hide scrollbars everywhere, keep scrolling */
+main { scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
+main::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* Drift aurora via background-position only. Transform/scale on .glow
+   made Chrome's extension popup slowly grow (it sizes to transformed bounds). */
+.glow {
+  background:
+    radial-gradient(58% 48% at 12% -6%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 60%),
+    radial-gradient(52% 44% at 104% 8%, color-mix(in srgb, var(--warn) 26%, transparent), transparent 55%),
+    radial-gradient(70% 60% at 50% 118%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 62%);
+  background-size: 140% 140%, 130% 130%, 150% 150%;
+  background-repeat: no-repeat;
+  filter: saturate(150%);
+  animation: aurora 22s var(--ease) infinite alternate;
+}
+@keyframes aurora {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+  50%  { background-position: 18% 12%, 82% 18%, 40% 90%; }
+  100% { background-position: 8% 20%, 90% 8%, 55% 85%; }
+}
+
+/* Shared frosted panel: blur fill, light rim, soft inner highlight */
+.tab,
+.switch,
+.icon-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--glass), var(--glass)) padding-box,
+    linear-gradient(158deg, var(--rim), var(--rim-soft) 42%, transparent 72%) border-box;
+  -webkit-backdrop-filter: blur(22px) saturate(185%);
+  backdrop-filter: blur(22px) saturate(185%);
+  box-shadow:
+    inset 0 1px 0 var(--rim),
+    inset 0 -10px 24px color-mix(in srgb, var(--accent) 6%, transparent),
+    var(--shadow);
+}
+
+/* Soft highlight across the top-left of each glass panel */
+.tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(142deg, color-mix(in srgb, white 24%, transparent), transparent 44%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+/* Light sweep across pill controls on hover */
+.icon-btn::before,
+button.action::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 45%;
+  transform: skewX(-18deg);
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, white 48%, transparent), transparent);
+  transition: left 0.55s var(--ease);
+}
+.icon-btn:hover::before,
+button.action:hover::before { left: 135%; }
+
+/* Glossy primary action button (keeps the accent fill) */
+button.action {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 88%, white), var(--accent));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 42%, transparent),
+    0 8px 20px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+/* Live tiles: gentle inner glass so they read as chips floating on the panel */
+.tile {
+  background: color-mix(in srgb, var(--bg1) 30%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Frosted status mark with a soft halo */
+.mark { box-shadow: 0 0 0 4px var(--ok-soft), 0 0 14px color-mix(in srgb, var(--ok) 55%, transparent); }
+.mark.warn { box-shadow: 0 0 0 4px var(--warn-soft), 0 0 14px color-mix(in srgb, var(--warn) 55%, transparent); }
+.mark.bad { box-shadow: 0 0 0 4px var(--bad-soft), 0 0 16px color-mix(in srgb, var(--bad) 60%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .mark, .icon-btn.busy svg, .glow { animation: none !important; }
+  .icon-btn, .tile, button.action, main { transition: none !important; scroll-behavior: auto; }
+  .icon-btn::before, button.action::before { display: none; }
+}

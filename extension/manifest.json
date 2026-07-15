@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "LiveView Reconnect Ring",
+  "version": "0.6.0",
+  "description": "Auto-reconnects Ring multi-cam live view tiles when they drop and show Reconnect.",
+  "minimum_chrome_version": "102",
+  "permissions": ["storage", "notifications", "power", "alarms", "scripting", "debugger"],
+  "host_permissions": ["https://account.ring.com/*"],
+  "background": {
+    "service_worker": "background/sw.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://account.ring.com/*"],
+      "run_at": "document_idle",
+      "js": [
+        "content/lib/dom.js",
+        "content/lib/matcher.js",
+        "content/lib/actuator.js",
+        "content/lib/backoff.js",
+        "content/lib/liveness.js",
+        "content/lib/tiles.js",
+        "content/lib/tile-state.js",
+        "content/lib/auth.js",
+        "content/watchdog.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "LiveView Reconnect Ring",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
